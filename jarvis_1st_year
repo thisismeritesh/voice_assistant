@@ -1,0 +1,722 @@
+import pyttsx3
+
+import speech_recognition as sr
+
+import webbrowser
+
+import pyautogui
+
+import os
+
+from googletrans import Translator
+
+import pytz
+
+import datetime
+
+import random
+
+import math
+
+import time
+
+Engine = pyttsx3.init('sapi5')
+
+voices = Engine.getProperty('voices')
+
+Engine.setProperty('voice', voices[1].id)
+
+Engine.setProperty('rate', 180) #words per minute
+
+# print(voices[0].id,voices[1].id)
+
+def recorder():
+
+    r = sr.Recognizer()
+
+    with sr.Microphone() as source:
+
+        print("speak now.....")
+
+        r.pause_threshold = 2
+
+        audio = r.listen(source)
+
+    try:
+
+        text = r.recognize_google(audio)
+
+        print("you said ", text)
+
+    except Exception as e:
+
+        print("sorry but i couldn't understand what you said,please try again or check your internet conection")
+        
+        return "None"
+
+    text = text.lower()
+
+    return text
+
+def speak(string):
+
+    Engine.say(string)
+
+    Engine.runAndWait()
+
+def open_website(text):
+
+    new_text = text.replace("open", "").strip()
+
+    new_text = new_text.replace(" ", "")
+
+    speak(f"opening {new_text}")
+
+    url = "https://www."+new_text
+
+    print(url)
+
+    webbrowser.open(url)
+
+def wish_me():
+
+    time = int(datetime.datetime.now().hour)
+
+    if time >= 4 and time <= 12:
+
+        speak("good morning sir how can i help you")
+
+    elif time > 12 and time <= 3:
+
+        speak("good afternoon sir how can i help you")
+
+    else:
+
+        speak("good evening sir how can i help you")
+
+def get_language_abbrevation(txt):
+
+    languages = {'afrikaans': 'af', 'albanian': 'sq', 'amharic': 'am', 'arabic': 'ar', 'armenian': 'hy', 'azerbaijani': 'az', 'basque': 'eu', 'belarusian': 'be', 'bengali': 'bn', 'bosnian': 'bs', 'bulgarian': 'bg', 'catalan': 'ca', 'cebuano': 'ceb', 'chichewa': 'ny', 'chinese (simplified)': 'zh-cn', 'corsican': 'co', 'croatian': 'hr', 'czech': 'cs', 'danish': 'da', 'dutch': 'nl', 'english': 'en', 'esperanto': 'eo', 'estonian': 'et', 'filipino': 'tl', 'finnish': 'fi', 'french': 'fr', 'frisian': 'fy', 'galician': 'gl', 'georgian': 'ka', 'german': 'de', 'greek': 'el', 'gujarati': 'gu', 'haitian creole': 'ht', 'hausa': 'ha', 'hawaiian': 'haw', 'hebrew': 'he', 'hindi': 'hi', 'hmong': 'hmn', 'hungarian': 'hu', 'icelandic': 'is', 'igbo': 'ig', 'indonesian': 'id', 'irish': 'ga', 'italian': 'it', 'japanese': 'ja', 'javanese': 'jw', 'kannada': 'kn', 'kazakh': 'kk', 'khmer': 'km', 'korean': 'ko', 'kurdish': 'ku','kyrgyz': 'ky', 'lao': 'lo', 'latin': 'la', 'latvian': 'lv', 'lithuanian': 'lt', 'luxembourgish': 'lb', 'macedonian': 'mk', 'malagasy': 'mg', 'malay': 'ms', 'malayalam': 'ml', 'maltese': 'mt', 'maori': 'mi', 'marathi': 'mr', 'mongolian': 'mn', 'myanmar': 'my', 'nepali': 'ne', 'norwegian': 'no', 'odia': 'or', 'pashto': 'ps', 'persian': 'fa', 'polish': 'pl', 'portuguese': 'pt', 'punjabi': 'pa', 'romanian': 'ro', 'russian': 'ru', 'samoan': 'sm', 'scots gaelic': 'gd', 'serbian': 'sr', 'sesotho': 'st', 'shona': 'sn', 'sindhi': 'sd', 'sinhala': 'si', 'slovak': 'sk', 'slovenian': 'sl', 'somali': 'so', 'spanish': 'es', 'sundanese': 'su', 'swahili': 'sw', 'swedish': 'sv', 'tajik': 'tg', 'tamil': 'ta', 'telugu': 'te', 'thai': 'th', 'turkish': 'tr', 'ukrainian': 'uk', 'urdu': 'ur', 'uyghur': 'ug', 'uzbek': 'uz', 'vietnamese': 'vi', 'welsh': 'cy', 'xhosa': 'xh', 'yiddish': 'yi', 'yoruba': 'yo'}
+
+    for i in languages.keys():
+
+        if txt == i:
+
+            return languages.get(i)
+
+def translator_google(text):
+
+    text = text.replace("translate", "")
+
+    speak("sir  please tell me in which language you want to translate ?")
+
+    txt = recorder()
+
+    txxt = get_language_abbrevation(txt)
+
+    translator = Translator()
+
+    translation = translator.translate(text, dest=txxt)
+
+    print(translation)
+
+    speak(translation)
+
+def world_clock(txt):
+
+    txt = txt.replace("what", "")
+    
+    txt = txt.replace("the", "")
+
+    txt = txt.replace("time", "")
+
+    txt = txt.replace("of", "")
+
+    txt = txt.replace("now", "")
+
+    txt = txt.replace("how", "")
+
+    txt = txt.replace("much", "")
+
+    txt = txt.replace("find", "")
+
+    txt = txt.strip()
+
+    print(txt)
+
+    data = {'afghanistan': 'asia/kabul', 'armenia': 'asia/yerevan', 'azerbaijan': 'asia/baku', 'bahrain': 'asia/bahrain', 'bangladesh': 'asia/dhaka', 'bhutan': 'asia/thimphu', 'brunei': 'asia/brunei', 'cambodia': 'asia/phnom_penh', 'china': 'asia/shanghai', 'cyprus': 'asia/nicosia', 'georgia': 'asia/tbilisi', 'india': 'asia/kolkata', 'indonesia': 'asia/jakarta', 'iran': 'asia/tehran', 'iraq': 'asia/baghdad', 'israel': 'asia/jerusalem', 'japan': 'asia/tokyo', 'jordan': 'asia/amman', 'kazakhstan': 'asia/almaty', 'kuwait': 'asia/kuwait', 'kyrgyzstan': 'asia/bishkek', 'laos': 'asia/vientiane', 'lebanon': 'asia/beirut', 'malaysia': 'asia/kuala_lumpur', 'maldives': 'indian/maldives', 'mongolia': 'asia/ulaanbaatar', 'myanmar': 'asia/yangon', 'nepal': 'asia/kathmandu', 'north korea': 'asia/pyongyang', 'oman': 'asia/muscat', 'pakistan': 'asia/karachi', 'palestine': 'asia/gaza', 'philippines': 'asia/manila', 'qatar': 'asia/qatar', 'saudi arabia': 'asia/riyadh', 'singapore': 'asia/singapore', 'south korea': 'asia/seoul', 'sri lanka': 'asia/colombo', 'syria': 'asia/damascus', 'taiwan': 'asia/taipei', 'tajikistan': 'asia/dushanbe', 'thailand': 'asia/bangkok', 'timor-leste': 'asia/dili', 'turkey': 'europe/istanbul', 'turkmenistan': 'asia/ashgabat', 'united arab emirates': 'asia/dubai', 'uzbekistan': 'asia/tashkent', 'vietnam': 'asia/ho_chi_minh', 'yemen': 'asia/aden', 'albania': 'europe/tirane', 'andorra': 'europe/andorra', 'austria': 'europe/vienna', 'belarus': 'europe/minsk', 'belgium': 'europe/brussels', 'bosnia and herzegovina': 'europe/sarajevo', 'bulgaria': 'europe/sofia', 'croatia': 'europe/zagreb', 'czech republic': 'europe/prague', 'denmark': 'europe/copenhagen', 'estonia': 'europe/tallinn', 'finland': 'europe/helsinki', 'france': 'europe/paris', 'germany': 'europe/berlin', 'greece': 'europe/athens', 'hungary': 'europe/budapest', 'iceland': 'atlantic/reykjavik', 'ireland': 'europe/dublin', 'italy': 'europe/rome', 'kosovo': 'europe/belgrade', 'latvia': 'europe/riga', 'liechtenstein': 'europe/vaduz', 'lithuania': 'europe/vilnius', 'luxembourg': 'europe/luxembourg', 'malta': 'europe/malta', 'moldova': 'europe/chisinau', 'monaco': 'europe/monaco', 'montenegro': 'europe/belgrade', 'netherlands': 'europe/amsterdam', 'north macedonia': 'europe/skopje', 'norway': 'europe/oslo', 'poland': 'europe/warsaw', 'portugal': 'europe/lisbon', 'romania': 'europe/bucharest', 'russia': 'europe/moscow', 'san marino': 'europe/rome', 'serbia': 'europe/belgrade', 'slovakia': 'europe/bratislava', 'slovenia': 'europe/ljubljana', 'spain': 'europe/madrid', 'sweden': 'europe/stockholm', 'switzerland': 'europe/zurich', 'ukraine': 'europe/kiev', 'united kingdom': 'europe/london', 'vatican city': 'europe/rome', 'algeria': 'africa/algiers', 'angola': 'africa/luanda', 'benin': 'africa/porto-novo', 'botswana': 'africa/gaborone', 'burkina faso': 'africa/ouagadougou', 'burundi': 'africa/bujumbura', 'cameroon': 'africa/douala', 'cape verde': 'atlantic/cape_verde', 'central african republic': 'africa/bangui', 'chad': 'africa/ndjamena', 'comoros': 'indian/comoro', 'democratic republic of the congo': 'africa/kinshasa', 'djibouti': 'africa/djibouti', 'egypt': 'africa/cairo', 'equatorial guinea': 'africa/malabo', 'eritrea': 'africa/asmara', 'eswatini (formerly swaziland)': 'africa/mbabane', 'ethiopia': 'africa/addis_ababa', 'gabon': 'africa/libreville', 'gambia': 'africa/banjul', 'ghana': 'africa/accra', 'guinea': 'africa/conakry', 'guinea-bissau': 'africa/bissau', 'ivory coast': 'africa/abidjan', 'kenya': 'africa/nairobi', 'lesotho': 'africa/maseru', 'liberia': 'africa/monrovia', 'libya': 'africa/tripoli', 'madagascar': 'indian/antananarivo', 'malawi': 'africa/blantyre', 'mali': 'africa/bamako', 'mauritania': 'africa/nouakchott', 'mauritius': 'indian/mauritius', 'morocco': 'africa/casablanca', 'mozambique': 'africa/maputo', 'namibia': 'africa/windhoek', 'niger': 'africa/niamey', 'nigeria': 'africa/lagos', 'republic of the congo': 'africa/brazzaville', 'rwanda': 'africa/kigali', 'são tomé and príncipe': 'africa/sao_tome', 'senegal': 'africa/dakar', 'seychelles': 'indian/mahe', 'sierra leone': 'africa/freetown', 'somalia': 'africa/mogadishu', 'south africa': 'africa/johannesburg', 'south sudan': 'africa/juba', 'sudan': 'africa/khartoum', 'tanzania': 'africa/dar_es_salaam', 'togo': 'africa/lome', 'tunisia': 'africa/tunis', 'uganda': 'africa/kampala', 'zambia': 'africa/lusaka', 'zimbabwe': 'africa/harare', 'antigua and barbuda': 'america/port_of_spain', 'argentina': 'america/argentina/buenos_aires', 'bahamas': 'america/nassau', 'barbados': 'america/barbados', 'belize': 'america/belize', 'bolivia': 'america/la_paz', 'brazil': 'america/sao_paulo', 'canada': 'america/toronto', 'chile': 'america/santiago', 'colombia': 'america/bogota', 'costa rica': 'america/costa_rica', 'cuba': 'america/havana', 'dominica': 'america/port_of_spain', 'dominican republic': 'america/santo_domingo', 'ecuador': 'america/guayaquil', 'el salvador': 'america/el_salvador', 'grenada': 'america/port_of_spain', 'guatemala': 'america/guatemala', 'guyana': 'america/guyana', 'haiti': 'america/port-au-prince', 'honduras': 'america/tegucigalpa', 'jamaica': 'america/jamaica', 'mexico': 'america/mexico_city', 'nicaragua': 'america/managua', 'panama': 'america/panama', 'paraguay': 'america/asuncion', 'peru': 'america/lima', 'saint kitts and nevis': 'america/port_of_spain', 'saint lucia': 'america/port_of_spain', 'saint vincent and the grenadines': 'america/port_of_spain', 'suriname': 'america/paramaribo', 'trinidad and tobago': 'america/port_of_spain', 'united states': 'america/new_york', 'uruguay': 'america/montevideo', 'venezuela': 'america/caracas', 'australia': 'australia/sydney', 'fiji': 'pacific/fiji', 'kiribati': 'pacific/tarawa', 'marshall islands': 'pacific/majuro', 'micronesia': 'pacific/chuuk', 'nauru': 'pacific/nauru', 'new zealand': 'pacific/auckland', 'palau': 'pacific/palau', 'papua new guinea': 'pacific/port_moresby', 'samoa': 'pacific/apia', 'solomon islands': 'pacific/guadalcanal', 'tonga': 'pacific/tongatapu', 'tuvalu': 'pacific/funafuti', 'vanuatu': 'pacific/efate'}
+
+    for i in data.keys():
+
+        if txt == i:
+
+            time_zone = pytz.timezone(data.get(i))
+
+            current_time = datetime.datetime.now(time_zone)
+
+            print(f"the current time in the country of {txt} is {current_time}")
+
+            speak(f"the current time in the country of {txt} is {current_time}")
+
+def play():
+
+    speak("what is your choice? snake   water or gun ")
+
+    user = recorder()
+
+    print(user)
+
+    computer = random.choice(['snake', 'water', 'gun'])
+
+    if user == computer:
+
+        return speak("is's a tie")
+
+    elif ((user == 'snake' and computer == 'water') or (user == 'water' and computer == 'gun') or (user == 'gun' and computer == 'snake')):
+
+        return speak("you won !")
+
+    return speak("you lost !")
+
+def get_integers(text):
+
+    a=list(text.split())
+
+    c=0
+
+    b=[]
+
+    for i in a:
+
+        try:
+
+            if type(int(i))==int:
+
+                b.append(int(i))
+
+        except:
+
+            c+=1  
+                          
+    return b
+        
+wish_me()
+
+while True:
+            
+            text = recorder()
+
+            if ".com" in text or ".in" in text or ".org" in text or ".gov" in text or ".net" in text or ".edu" in text or ".ac" in text or ".nic" in text:
+
+                open_website(text)
+
+            elif "open" in text:
+
+                if "chat gpt" in text:
+
+                    os.startfile( "C:\\Users\\Ritesh Kumar\\Desktop\\chat GPT.lnk")
+
+                elif "gmail" in text:
+
+                    os.startfile("C:\\Users\\Ritesh Kumar\\Desktop\\Gmail.lnk")
+
+                elif "hackerrank" in text or "hacker rank" in text:
+
+                    os.startfile("C:\\Users\\Ritesh Kumar\\Desktop\\Dashboard   HackerRank.lnk")
+
+                elif "codechef" in text or "code chef" in text:
+
+                    os.startfile("C:\\Users\\Ritesh Kumar\\Desktop\\CodeChef.lnk")
+
+                elif "youtube" in text:
+
+                    os.startfile("C:\\Users\\Ritesh Kumar\\Desktop\\YouTube.lnk")
+
+                elif "mycomputer" in text or "my pc" in text or "computer" in text or "personal computer" in text:
+
+                    os.startfile("C:\\Users\\Ritesh Kumar\\Desktop\\This PC - Shortcut.lnk")
+
+                elif "edge" in text:
+
+                    os.startfile("C:\\Users\\Ritesh Kumar\\Desktop\\Microsoft Edge.lnk")
+
+                elif "visual" in text or "vs" in text:
+
+                    os.startfile("C:\\Users\\Ritesh Kumar\\Desktop\\Visual Studio Code.lnk")
+
+                elif "whatsapp" in text:
+
+                    os.startfile("C:\\Program Files\\WindowsApps\\5319275A.WhatsAppDesktop_2.2313.6.0_x64__cv1g1gvanyjgm\\WhatsApp.exe")
+
+                elif "edge" in text:
+
+                    os.startfile("C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe")
+
+                elif "camera" in text:
+
+                    os.startfile("C:\\Program Files\\WindowsApps\\Microsoft.WindowsCamera_2022.2210.9.0_x64__8wekyb3d8bbwe\\WindowsCamera.exe")
+
+                elif "amazon" in text:
+
+                    os.startfile("C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Amazon.url")
+
+                elif "excel" in text:
+
+                    os.startfile("C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Excel.lnk")
+
+                elif "firefox" in text:
+
+                    os.startfile("C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Firefox.lnk")
+
+                elif "chrome" in text:
+
+                    os.startfile("C:\\Users\\Ritesh Kumar\\Desktop\\Google Chrome.lnk")
+
+                elif "explorer" in text:
+                    
+                    os.system('start explorer')
+
+                elif "power point" in text:
+
+                    os.startfile("C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\PowerPoint.lnk")
+
+                elif "word" in text:
+
+                    os.startfile("C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Word.lnk")
+
+                elif "notepad" in text:
+
+                    os.system('start notepad')
+                
+                elif "incognito" in text:
+
+                    os.startfile("C:\\Users\\Ritesh Kumar\\Desktop\\Google Chrome.lnk")
+
+                    time.sleep(0.5)
+
+                    pyautogui.hotkey('ctrl','shift','N')
+
+                elif "toolbar" in text:
+
+                    pyautogui.click(1700,1050)
+
+                elif "calender" in text or "notifications" in text:
+
+                    pyautogui.click(1900,1050)
+                    
+                elif "news" in text:
+
+                    pyautogui.moveRel(100,1050)    
+                         
+                elif "taskbar" in text:
+
+                    pyautogui.click(400,1050)    
+                    
+                elif "settings" in text or "setting" in text:
+
+                    pyautogui.hotkey('win','i')   
+                      
+                elif "store" in text:
+
+                    pyautogui.click(850,1050)    
+                       
+            elif ("search" in text) or ("find" in text):
+
+                if "youtube" in text or "video" in text:
+
+                    url = text.replace("search", "").strip()
+
+                    url = url.replace("youtube", "")
+
+                    url = url.replace("in", "")
+
+                    url = url.replace("on", "")
+
+                    url = url.replace("find", "")
+
+                    url = url.replace("google", "")
+
+                    url = url.replace("the", "")
+
+                    url = url.replace("video", "")
+
+                    url = url.replace(" ", "")
+
+                    webbrowser.open("https://www.youtube.com/results?search_query="+url)
+
+                elif "wikipedia" in text:
+
+                    url = text.replace("search", "").strip()
+
+                    url = url.replace("wikipedia", "")
+
+                    url = url.replace("in", "")
+
+                    url = url.replace("on", "")
+
+                    url = url.replace("find", "")
+
+                    url = url.replace("google", "")
+
+                    url = url.replace("the", "")
+
+                    url = url.replace(" ", "")
+
+                    webbrowser.open("https://en.wikipedia.org/wiki/"+url)
+
+                elif "image" in text:
+
+                    url = text.replace("search", "").strip()
+
+                    url = url.replace("image", "")
+
+                    url = url.replace("in", "")
+
+                    url = url.replace("on", "")
+
+                    url = url.replace("find", "")
+
+                    url = url.replace("google", "")
+
+                    url = url.replace("the", "")
+
+                    url = url.replace(" ", "")
+
+                    webbrowser.open("https://www.google.com/search?q="+url +"&rlz=1C1CHBF_enIN1051IN1051&sxsrf=APwXEdfSQLBLPVZ23dZPSpiE0riHnskrVg:1681471264549&source=lnms&tbm=isch&sa=X&ved=2ahUKEwjVmrHLoKn-AhVqZWwGHRKyBMsQ_AUoAXoECAIQAw&cshid=1681471331860091&biw=1536&bih=714&dpr=1.25")
+                    
+                elif "maps" in text or "map" in text:
+
+                    url = text.replace("search", "").strip()
+
+                    url = url.replace("maps", "")
+
+                    url = url.replace("in", "")
+
+                    url = url.replace("on", "")
+
+                    url = url.replace("find", "")
+
+                    url = url.replace("google", "")
+
+                    url = url.replace("the", "")
+
+                    url = url.replace(" ", "+")
+
+                    webbrowser.open("https://www.google.com/maps/search/"+url)
+
+                elif "google" in text:
+
+                    url = text.replace("search", "").strip()
+
+                    url = url.replace("google", "")
+
+                    url = url.replace("in", "")
+
+                    url = url.replace("on", "")
+
+                    url = url.replace("find", "")
+
+                    url = url.replace(" ", "")
+
+                    url = url.replace("the", "")
+
+                    webbrowser.open("https://www.google.com/search?q="+url)
+
+            elif "translate" in text:
+
+                translator_google(text)
+
+            elif "time" in text:
+
+                if "now" in text or "current" in text:
+
+                    time_zone = pytz.timezone('Asia/Kolkata')
+
+                    current_time = datetime.datetime.now(time_zone)
+
+                    print(current_time)
+
+                    speak(current_time)
+
+                else:
+                    speak("sir my functions are limited by my codes so please provide me the input in this format")
+
+                    speak(" find the  time of country name")
+
+                    speak("i am doing this to avoid wrong output and no output")
+
+                    ttxx = recorder()
+
+                    world_clock(ttxx)
+
+            elif "game" in text:
+
+                while True:
+
+                    play()
+
+                    speak("want to play one more time ?")
+
+                    speak("say yes to continue  and  no to exit the game  ")
+
+                    x = recorder()
+
+                    if x == 'no':
+
+                        break
+
+            elif "pause" in text or "stop" in text or "play" in text or "start" in text:
+
+                pyautogui.press('k')
+
+            elif "forward" in text or "aage" in text:
+
+                pyautogui.press('l')
+
+            elif "backward" in text or "peeche" in text or "piche" in text:
+
+                pyautogui.press('j')
+
+            elif "fullscreen" in text or "full screen" in text or "out" in text:
+
+                pyautogui.press('f')
+
+            elif "subtitles" in text:
+
+                pyautogui.press('c')
+
+            elif "close volume" in text or "no volume" in text or "volume" in text or "mute" in text or "unmute" in text:
+
+                pyautogui.press('m')
+
+            elif "mode" in text:
+
+                if "desktop" in text:
+
+                    pyautogui.press('i')
+
+                elif "landscape" in text or "half screen" in text or "half dispaly" in text:
+
+                    pyautogui.press('t')
+
+                elif "small" in text or "window" in text:
+
+                    pyautogui.press('i')
+
+            elif "close" in text:
+
+                pyautogui.hotkey('ctrl', 'w')
+
+            elif "new" in text and "tab" in text:
+
+                pyautogui.hotkey('ctrl', 't')
+
+            elif "calculate" in text:
+
+                if "plus" in text or "add" in text or "addition" in text or "+" in text:
+
+                    lis=get_integers(text)
+
+                    print(lis)
+
+                    s=lis[0]+lis[1]
+
+                    print(s)
+
+                    speak(s)
+
+                elif "minus" in text or "minus" in text or "difference" in text or "-" in text:
+
+                    lis=get_integers(text)
+
+                    print(lis)
+
+                    s=lis[0]-lis[1]
+
+                    print(s)
+                    
+                    speak(s)
+
+                elif "exponential" in text or "exponent" in text or "e the power" in text or "e raised to the power" in text:
+
+                    lis=get_integers(text)
+
+                    print(lis)
+
+                    s=math.exp(lis[0])
+
+                    print(s)
+                    
+                    speak(s)
+                    
+
+                elif "multiply" in text or "*" in text or "x" in text:
+
+                    lis=get_integers(text)
+
+                    print(lis)
+
+                    s=lis[0]*lis[1]
+
+                    print(s)
+                    
+                    speak(s)
+
+                elif "divide" in text or "/" in text:
+
+                    lis=get_integers(text)
+
+                    print(lis)
+
+                    s=lis[0]/lis[1]
+
+                    print(s)
+                    
+                    speak(s)
+
+                elif "power" in text or "^" in text or "**" in text:
+
+                    lis=get_integers(text)
+
+                    print(lis)
+
+                    s=lis[0]**lis[1]
+
+                    print(s)
+                    
+                    speak(s)
+
+                elif "remainder" in text or "%" in text:
+
+                    lis=get_integers(text)
+
+                    print(lis)
+
+                    s=lis[0 ] % lis[1]
+
+                    print(s)
+                    
+                    speak(s)
+
+                elif "square root" in text:
+
+                    lis=get_integers(text)
+
+                    print(lis)
+
+                    s=math.sqrt(lis[0])
+
+                    print(s)
+                    
+                    speak(s)
+
+                elif "cube root" in text:
+
+                    lis=get_integers(text)
+
+                    print(lis)
+
+                    s=math.cbrt(lis[0])
+
+                    print(s)
+                    
+                    speak(s)
+
+                elif "root" in text:
+
+                    lis=get_integers(text)
+
+                    print(lis)
+
+                    s=lis[-1]**(1/lis[0])
+
+                    print(s)
+                    
+                    speak(s)
+
+                elif "natural log" in text or "logarithm" in text or "log base e" in text:
+
+                    lis=get_integers(text)
+
+                    print(lis)
+
+                    s=math.log(lis[0])
+
+                    print(s)
+                    
+                    speak(s)
+
+                elif "log base 10" in text or "log base ten" in text:
+
+                    lis=get_integers(text)
+
+                    print(lis)
+
+                    s=math.log10(lis[0])
+
+                    print(s)
+                    
+                    speak(s)
+
+            elif "exit" in text:
+
+                pyautogui.hotkey('alt','F4')
+            
+            elif "linear" in text and ("equations" in text or "equation" in text):
+
+                speak("sir provide me the equations in this format a x + b y = c and is any one of the  constants is zero then also mention it in the equation ")
+
+                speak("sir tell me the first equation")
+
+                t1=recorder()
+
+                num_list_1=get_integers(t1)
+
+                print(num_list_1)
+
+                speak("sir tell me the second equation")
+
+                t2=recorder()
+
+                num_list_2=get_integers(t2)
+
+                print(num_list_2)
+                
+                if ((num_list_1[0]*num_list_2[1]==num_list_1[1]*num_list_2[0]) and (num_list_1[1]*num_list_2[2]==num_list_1[2]*num_list_2[1])):
+
+                    print("infinite solutions")
+
+                    speak("sir these equations have infinite solutions")
+
+                elif  ((num_list_1[0]*num_list_2[1]==num_list_1[1]*num_list_2[0]) and (num_list_1[1]*num_list_2[2]!=num_list_1[2]*num_list_2[1])):
+
+                    print("no solution")
+
+                    speak("sir these equations have no solutions")
+
+                elif (num_list_1[0]*num_list_2[1]!=num_list_1[1]*num_list_2[0]) :
+
+                    print("the value of first variable is :")
+
+                    print((num_list_1[2]*num_list_2[0]-num_list_1[0]*num_list_2[2]),"/",(num_list_1[1]*num_list_2[0]-num_list_1[0]*num_list_2[1]))
+
+                    print("the value of second variable is :")
+
+                    print((-num_list_1[2]*num_list_2[1]+num_list_1[1]*num_list_2[2]),"/",(-num_list_1[0]*num_list_2[1]+num_list_1[1]*num_list_2[0]))
+
+            elif "screenshot" in text:
+
+                pyautogui.hotkey('win','prtsc')
+
+            elif "type" in text or "likho" in text or "write" in text:
+
+                os.system('start notepad')                
+ 
+                speak("sir please tell me what you want me to write")
+
+                writing=recorder()
+                
+                for i in writing:
+
+                    pyautogui.press(i)
+                    
