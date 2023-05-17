@@ -20,6 +20,8 @@ import math
 
 import time
 
+import AppOpener
+
 Engine = pyttsx3.init('sapi5')
 
 voices = Engine.getProperty('voices')
@@ -212,85 +214,13 @@ while True:
 
             elif "open" in text:
 
-                if "chat gpt" in text:
+                if "start" in text:
 
-                    os.startfile( "C:\\Users\\Ritesh Kumar\\Desktop\\chat GPT.lnk")
+                    pyautogui.press("win")
 
-                elif "gmail" in text:
-
-                    os.startfile("C:\\Users\\Ritesh Kumar\\Desktop\\Gmail.lnk")
-
-                elif "hackerrank" in text or "hacker rank" in text:
-
-                    os.startfile("C:\\Users\\Ritesh Kumar\\Desktop\\Dashboard   HackerRank.lnk")
-
-                elif "codechef" in text or "code chef" in text:
-
-                    os.startfile("C:\\Users\\Ritesh Kumar\\Desktop\\CodeChef.lnk")
-
-                elif "youtube" in text:
-
-                    os.startfile("C:\\Users\\Ritesh Kumar\\Desktop\\YouTube.lnk")
-
-                elif "mycomputer" in text or "my pc" in text or "computer" in text or "personal computer" in text:
-
-                    os.startfile("C:\\Users\\Ritesh Kumar\\Desktop\\This PC - Shortcut.lnk")
-
-                elif "edge" in text:
-
-                    os.startfile("C:\\Users\\Ritesh Kumar\\Desktop\\Microsoft Edge.lnk")
-
-                elif "visual" in text or "vs" in text:
-
-                    os.startfile("C:\\Users\\Ritesh Kumar\\Desktop\\Visual Studio Code.lnk")
-
-                elif "whatsapp" in text:
-
-                    os.startfile("C:\\Program Files\\WindowsApps\\5319275A.WhatsAppDesktop_2.2313.6.0_x64__cv1g1gvanyjgm\\WhatsApp.exe")
-
-                elif "edge" in text:
-
-                    os.startfile("C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe")
-
-                elif "camera" in text:
-
-                    os.startfile("C:\\Program Files\\WindowsApps\\Microsoft.WindowsCamera_2022.2210.9.0_x64__8wekyb3d8bbwe\\WindowsCamera.exe")
-
-                elif "amazon" in text:
-
-                    os.startfile("C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Amazon.url")
-
-                elif "excel" in text:
-
-                    os.startfile("C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Excel.lnk")
-
-                elif "firefox" in text:
-
-                    os.startfile("C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Firefox.lnk")
-
-                elif "chrome" in text:
-
-                    os.startfile("C:\\Users\\Ritesh Kumar\\Desktop\\Google Chrome.lnk")
-
-                elif "explorer" in text:
-                    
-                    os.system('start explorer')
-
-                elif "power point" in text:
-
-                    os.startfile("C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\PowerPoint.lnk")
-
-                elif "word" in text:
-
-                    os.startfile("C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Word.lnk")
-
-                elif "notepad" in text:
-
-                    os.system('start notepad')
-                
                 elif "incognito" in text:
 
-                    os.startfile("C:\\Users\\Ritesh Kumar\\Desktop\\Google Chrome.lnk")
+                    AppOpener.open("chrome",match_closest=True)
 
                     time.sleep(0.5)
 
@@ -300,26 +230,16 @@ while True:
 
                     pyautogui.click(1700,1050)
 
-                elif "calender" in text or "notifications" in text:
+                elif "notifications" in text:
 
                     pyautogui.click(1900,1050)
-                    
-                elif "news" in text:
 
-                    pyautogui.moveRel(100,1050)    
-                         
-                elif "taskbar" in text:
+                else:
 
-                    pyautogui.click(400,1050)    
-                    
-                elif "settings" in text or "setting" in text:
+                    text=text.replace("open","")
 
-                    pyautogui.hotkey('win','i')   
-                      
-                elif "store" in text:
+                    AppOpener.open(text,match_closest=True)
 
-                    pyautogui.click(850,1050)    
-                       
             elif ("search" in text) or ("find" in text):
 
                 if "youtube" in text or "video" in text:
@@ -658,9 +578,11 @@ while True:
                     
                     speak(s)
 
-            elif "exit" in text:
+            elif "close" in text:
 
-                pyautogui.hotkey('alt','F4')
+                text=text.replace("close","")
+
+                AppOpener.close(text)
             
             elif "linear" in text and ("equations" in text or "equation" in text):
 
@@ -719,4 +641,17 @@ while True:
                 for i in writing:
 
                     pyautogui.press(i)
-                    
+
+            elif "scroll" in text :
+
+                  if "up" in text or "upar" in text or "oopar" in text :
+                      
+                      for i in range(10):
+                          
+                          pyautogui.scroll(50)
+
+                  elif "down" in text or "neeche" in text:
+                      
+                      for i in range(10):
+                          
+                         pyautogui.scroll(-50)
